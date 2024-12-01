@@ -17,8 +17,6 @@ export default function Navbar() {
     const [activeDiscountCategory, setActiveDiscountCategory] = useState(null);
     const [categories, setCategories] = useState({});
     const [discountCategories, setDiscountCategories] = useState({});
-    const [isSticky, setIsSticky] = useState(false);
-
     const menuRef = useClickOutside(() => {
         setShowMenu(false);
         setActiveCategory(null);
@@ -28,22 +26,6 @@ export default function Navbar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
-
-    // Add scroll event listener to handle sticky navbar
-    useEffect(() => {
-        const handleScroll = () => {
-            // Adjust the scroll threshold as needed (e.g., 50px)
-            setIsSticky(window.scrollY > 50);
-        };
-
-        // Add scroll event listener
-        window.addEventListener('scroll', handleScroll);
-
-        // Cleanup the event listener
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
 
     useEffect(() => {
        async function fetchCategories() {
@@ -68,27 +50,7 @@ export default function Navbar() {
 
     return (
         <div className="relative">
-            <nav 
-                className={`
-                    w-full 
-                    flex 
-                    justify-between 
-                    items-center 
-                    fixed 
-                    top-0 
-                    left-0 
-                    right-0 
-                    z-40 
-                    px-4 
-                    py-3 
-                    bg-white 
-                    border-b 
-                    border-gray-200 
-                    transition-shadow 
-                    duration-300
-                    ${isSticky ? 'shadow-md' : ''}
-                `}
-            >
+            <nav className="w-full flex justify-between items-center sticky top-0 z-40 px-4 py-3 bg-white border-b border-gray-200">
                 <div className="flex items-center space-x-4">
                     <button 
                         onClick={() => setShowMenu(!showMenu)} 
@@ -154,9 +116,6 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* Add a spacer div to prevent content from being hidden behind the fixed navbar */}
-            <div className="h-[60px]"></div>
-
             <div
                 ref={menuRef}
                 className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${
@@ -219,7 +178,6 @@ export default function Navbar() {
     );
 }
 
-// Keep the existing CategoryLink, CategoryGroup, and DiscountSection components unchanged
 function CategoryLink({ children, to, onClick, className = "" }) {
     return (
         <Link 
